@@ -7,7 +7,7 @@ app_name = "accounts"
 
 # DRF Router for auth endpoints
 router = DefaultRouter()
-router.register(r'', AuthViewSet, basename='auth')
+router.register(r'api', AuthViewSet, basename='auth')
 
 urlpatterns = [
     # Classical Django pages (use views.py)
