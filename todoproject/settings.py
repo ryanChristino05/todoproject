@@ -68,7 +68,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",  # Support both localhost and 127.0.0.1
-    "https://taskmanagementfinal.vercel.app",  # Vercel production frontend
+     "https://task-management-tan-two.vercel.app",    # Vercel production frontend
     "https://task-management-mmixbbi48-ryan-christinos-projects.vercel.app",  # alternate Vercel preview URL (from user's console)
 ]
 
@@ -76,7 +76,7 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://taskmanagementfinal.vercel.app",  # Vercel production frontend
+     "https://task-management-tan-two.vercel.app", # Vercel production frontend
     "https://task-management-mmixbbi48-ryan-christinos-projects.vercel.app",  # alternate Vercel preview URL
 ]
 
