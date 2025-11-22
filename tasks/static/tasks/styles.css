@@ -1,0 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+p{
+    display: block;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background: #fff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: block;
+}
+
+li strong {
+    display: block;
+    color: #333;
+    font-size: 1.2em;
+}
+
+.add-task, .back {
+    display: block;
+    width: 150px;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background: #28a745;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.add-task:hover, .back:hover {
+    background: #218838;
+}
+
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+form p {
+    margin: 10px 0;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+.btn-del,.btn-edit{
+    padding: 10px;
+    margin: 10px;
+    text-decoration: none;
+    font-family:Arial, Helvetica, sans-serif;
+    border-radius: 5px;
+    color:#fff;
+    transition:0s background ease-in;
+    display: inline-block;
+
+}
+.btn-del{
+    background:rgb(62, 62, 219) ;
+}
+.btn-del:hover{
+    background: rgb(45, 45, 136);
+
+}
+.btn-edit{
+    background: rgb(201, 40, 40);
+}
+.btn-edit:hover{
+    background: rgb(105, 22, 22);
+}
+.username{
+    font-size: 1.5em;
+    color: #3720b8;
+    margin: 10px;
+}

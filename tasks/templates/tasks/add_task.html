@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="{% static 'tasks/styles.css' %}">
+</head>
+<body>
+    <h1>Add Task</h1>
+    <form method="post" action="{% url 'tasks:add_task' %}">
+        {% csrf_token %}
+        {{ form.as_p}}
+        <button type="submit">Save Task</button>
+    </form>
+    <a class="back" href="{% url 'tasks:task_list' %}">Back to Task List</a>
+</body>
+</html>

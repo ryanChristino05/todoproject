@@ -1,0 +1,2 @@
+# Ce fichier est remplacé par api_views.py — voir urls.py ligne 5
+# Les endpoints sont maintenant gérés par AuthViewSet dans api_views.py

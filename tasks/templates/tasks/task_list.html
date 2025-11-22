@@ -1,0 +1,229 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Tâches</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+body {
+    padding-top: 70px; /* Hauteur de la navbar */
+}
+    </style>
+</head>
+<body class="bg-light">
+    <!-- NAVIGATION -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">📝 Ma Todo</a>
+            <div class="collapse navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <span class="nav-link text-light">Connecté : <strong>{{ user.username }}</strong></span>
+                        </li>
+                        <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            ⚙️ Compte
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><span class="dropdown-item-text">Connecté : <strong>{{ user.username }}</strong></span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">🔄 Changer de compte</a></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">🚪 Se déconnecter</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Se connecter</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:register' %}">Créer un compte</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <!-- STATISTIQUES -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📋 Total</h5>
+                        <h3>{{ total_tasks }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">✅ Terminées</h5>
+                        <h3>{{ completed_tasks }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">⏳ En cours</h5>
+                        <h3>{{ pending_tasks }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">📊 Progression</h5>
+                        <h3>{% if total_tasks > 0 %}{{ progress|floatformat:0 }}{% else %}0{% endif %}%</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTRES ET RECHERCHE -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <!-- RECHERCHE -->
+                    <div class="col-md-3">
+                        <label for="search" class="form-label">🔍 Recherche</label>
+                        <input type="text" class="form-control" id="search" name="search" value="{{ search }}" placeholder="Titre ou description...">
+                    </div>
+                    
+                    <!-- FILTRE PAR STATUS -->
+                    <div class="col-md-2">
+                        <label for="status" class="form-label">📊 Statut</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="">Tous</option>
+                            <option value="todo" {% if status_filter == 'todo' %}selected{% endif %}>À faire</option>
+                            <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>En cours</option>
+                            <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Terminé</option>
+                        </select>
+                    </div>
+                    
+                    <!-- FILTRE PAR PRIORITÉ -->
+                    <div class="col-md-2">
+                        <label for="priority" class="form-label">🎯 Priorité</label>
+                        <select class="form-select" id="priority" name="priority">
+                            <option value="">Toutes</option>
+                            <option value="low" {% if priority_filter == 'low' %}selected{% endif %}>Faible</option>
+                            <option value="medium" {% if priority_filter == 'medium' %}selected{% endif %}>Moyenne</option>
+                            <option value="high" {% if priority_filter == 'high' %}selected{% endif %}>Haute</option>
+                        </select>
+                    </div>
+                    <!-- TRI -->
+                    <div class="col-md-2">
+                        <label for="sort" class="form-label">📈 Tri</label>
+                        <select class="form-select" id="sort" name="sort">
+                            <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Date de création</option>
+                            <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Titre</option>
+                            <option value="due_date" {% if sort_by == 'due_date' %}selected{% endif %}>Date d'échéance</option>
+                            <option value="priority" {% if sort_by == 'priority' %}selected{% endif %}>Priorité</option>
+                            <option value="status" {% if sort_by == 'status' %}selected{% endif %}>Statut</option>
+                        </select>
+                    </div>
+                    
+                    <!-- BOUTONS -->
+                    <div class="col-md-3">
+                        <label class="form-label">&nbsp;</label>
+                        <div>
+                            <button type="submit" class="btn btn-primary">🔍 Filtrer</button>
+                            <a href="{% url 'tasks:task_list' %}" class="btn btn-outline-secondary">🔄 Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- TITRE ET BOUTON AJOUT -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>📋 Liste de mes tâches</h2>
+            <a class="btn btn-primary" href="{% url 'tasks:add_task' %}">➕ Nouvelle tâche</a>
+        </div>
+
+        <!-- TABLEAU DES TÂCHES -->
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered bg-white shadow-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Titre</th>
+                        <th>Description</th>
+                        <th>Priorité</th>
+                        <th>Statut</th>
+                        <th>Créé le</th>
+                        <th>Échéance</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr class="{% if task.status == 'completed' %}table-success{% elif task.priority == 'high' %}table-danger{% elif task.priority == 'medium' %}table-warning{% endif %}">
+                        <td><strong>{{ task.title }}</strong></td>
+                        <td>{{ task.description|default:"-"|truncatechars:200 }}</td>
+                        
+                        <!-- COLONNE PRIORITÉ -->
+                        <td>
+                            {% if task.priority == 'high' %}
+                                <span class="badge bg-danger">🔥 Haute</span>
+                            {% elif task.priority == 'medium' %}
+                                <span class="badge bg-warning">⚡ Moyenne</span>
+                            {% else %}
+                                <span class="badge bg-secondary">💤 Faible</span>
+                            {% endif %}
+                        </td>
+                        
+                        <!-- COLONNE STATUT -->
+                        <td>
+                            {% if task.status == 'completed' %}
+                                <span class="badge bg-success">✅ Terminé</span>
+                            {% elif task.status == 'in_progress' %}
+                                <span class="badge bg-info">🔄 En cours</span>
+                            {% else %}
+                                <span class="badge bg-secondary">📝 À faire</span>
+                            {% endif %}
+                        </td>
+                        
+                        <td>{{ task.created_at|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if task.due_date %}
+                                <span class="{% if task.due_date|date:'Y-m-d' < 'now'|date:'Y-m-d' %}text-danger{% endif %}">
+                                    {{ task.due_date|date:"d/m/Y" }}
+                                </span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'tasks:edit_task' task.id %}" class="btn btn-sm btn-outline-secondary">✏️</a>
+                            <form action="{% url 'tasks:delete_task' task.id %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Supprimer cette tâche ?')">🗑️</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">
+                            {% if search or status_filter or priority_filter %}
+                                Aucune tâche trouvée avec ces critères.
+                            {% else %}
+                                Aucune tâche trouvée. Créez votre première tâche !
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
