@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-pp8+o-$tgfqpo#npjqk%yy&hp#3@%0--+g&5glpjym0_8u8gzo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "todoproject-fvdp.onrender.com"]
 
 
 # Application definition
@@ -68,19 +68,21 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",  # Support both localhost and 127.0.0.1
+    "https://taskmanagementfinal.vercel.app",  # Vercel production frontend
 ]
 
 # CSRF settings - trust frontend origin
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://taskmanagementfinal.vercel.app",  # Vercel production frontend
 ]
 
 # Session and CSRF cookie settings for cross-origin requests
 SESSION_COOKIE_SAMESITE = None  # Allow cross-origin session cookies
-SESSION_COOKIE_SECURE = False   # Dev only; set True in production with HTTPS
+SESSION_COOKIE_SECURE = not DEBUG  # True in production (HTTPS), False in dev
 CSRF_COOKIE_SAMESITE = None      # Allow cross-origin CSRF cookies
-CSRF_COOKIE_SECURE = False       # Dev only
+CSRF_COOKIE_SECURE = not DEBUG    # True in production (HTTPS), False in dev
 SESSION_COOKIE_HTTPONLY = False  # Allow frontend JS to read session cookie if needed
 SESSION_COOKIE_AGE = 1209600     # 2 weeks
 SESSION_COOKIE_NAME = 'sessionid'
