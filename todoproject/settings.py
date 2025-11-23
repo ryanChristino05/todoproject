@@ -81,7 +81,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "https://task-management-tan-two.vercel.app",  # Vercel production
-    ".vercel.app",  # Trust all Vercel subdomains for CSRF
+    "https://*.vercel.app",   # Trust all Vercel subdomains for CSRF
 ]
 
 # Session and CSRF cookie settings for cross-origin requests
